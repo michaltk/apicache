@@ -70,9 +70,10 @@ function ApiCache() {
 
     if (!response) return false
 
-    if (toggle && !toggle(request, response)) {
-      return false
-    }
+    // ??
+    // if (toggle && !toggle(request, response)) {
+    //   return false
+    // }
 
     if (codes.exclude && codes.exclude.length && codes.exclude.indexOf(response.statusCode) !== -1) return false
     if (codes.include && codes.include.length && codes.include.indexOf(response.statusCode) === -1) return false
@@ -206,9 +207,6 @@ function ApiCache() {
 
 
   function sendCachedResponse(request, response, cacheObject, toggle) {
-    if (toggle && !toggle(request, response)) {
-      return false
-    }
 
     var headers = (typeof response.getHeaders === 'function') ? response.getHeaders() : response._headers;
 
@@ -396,6 +394,12 @@ function ApiCache() {
           appendKey = appendKey[opt.appendKey[i]]
         }
         key += '$$appendKey=' + appendKey
+      }
+
+      const ignoreCache = middlewareToggle && !middlewareToggle(req, res);
+      if (ignoreCache) {
+        makeResponseCacheable(req, res, next, key, duration, strDuration, middlewareToggle);
+        return;
       }
 
       // attempt cache hit
