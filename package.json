@@ -49,5 +49,7 @@
     "restify-etag-cache": "^1.0.12",
     "supertest": "^3.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "qs": "^6.5.1"
+  }
 }

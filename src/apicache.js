@@ -1,6 +1,7 @@
 var url         = require('url')
 var MemoryCache = require('./memory-cache')
 var pkg         = require('../package.json')
+var qs          = require('qs')
 
 var t           = {
   ms:           1,
@@ -380,8 +381,11 @@ function ApiCache() {
       var key = req.originalUrl || req.url
 
       // Remove querystring from key if jsonp option is enabled
+        // only remove ignore cache from qs
       if (opt.jsonp) {
-        key = url.parse(key).pathname
+        const parsedUrl = url.parse(key.toLowerCase());
+        const {  ignorecache, ...restQueryWithoutIgnoreCache } = qs.parse(parsedUrl.query);
+        key = `${parsedUrl.pathname}?${qs.stringify(restQueryWithoutIgnoreCache)}`
       }
 
       // add appendKey (either custom function or response path)
