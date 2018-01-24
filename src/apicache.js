@@ -384,8 +384,9 @@ function ApiCache() {
         // only remove ignore cache from qs
       if (opt.jsonp) {
         const parsedUrl = url.parse(key.toLowerCase());
-        const {  ignorecache, ...restQueryWithoutIgnoreCache } = qs.parse(parsedUrl.query);
-        key = `${parsedUrl.pathname}?${qs.stringify(restQueryWithoutIgnoreCache)}`
+        const queryString = qs.parse(parsedUrl.query);
+        delete queryString.ignorecache;
+        key = `${parsedUrl.pathname}?${qs.stringify(queryString)}`
       }
 
       // add appendKey (either custom function or response path)
